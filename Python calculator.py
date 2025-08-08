@@ -20,4 +20,5 @@ def calculator():
     with open("result.txt", "w") as file:
         file.write(str(result))
     return result
+
 calculator(12, 8, '+')
