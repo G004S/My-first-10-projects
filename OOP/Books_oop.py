@@ -12,8 +12,8 @@ class Book:
         return cls.total_books
     @staticmethod
     def is_isbn_valid(isbn):
-        degits = isbn.replace("-", "")
-        return len(degits) in [10, 13]
+        digits = isbn.replace("-", "")
+        return len(digits) in [10, 13]
 
 b1 = Book("The Great Gatsby", "978-5-4461-1173-7")
 
