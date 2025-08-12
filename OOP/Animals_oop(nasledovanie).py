@@ -1,8 +1,5 @@
 from abc import ABC, abstractmethod
-
 import logging
-
-# Базовая настройка логов: уровень и формат
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
@@ -11,7 +8,6 @@ logging.basicConfig(
 class LogMixin:
     @property
     def logger(self):
-        # имя логгера — имя класса (удобно в больших проектах)
         return logging.getLogger(self.__class__.__name__)
 
     def log_info(self, msg, *args, **kwargs):
@@ -24,8 +20,23 @@ class LogMixin:
         self.logger.error(msg, *args, **kwargs)
 
 class Animal(ABC):
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, name, age):
+        self._name = name
+        self._age = None
+        self.age = age
+    @property
+    def name(self):
+        return self._name
+    @property
+    def age(self):
+        return self._age
+    @age.setter
+    def age(self, value):
+        if not isinstance(value, int):
+            raise ValueError("Age must be an integer")
+        if value < 0:
+            raise ValueError("Age must be a positive number")
+        self._age = value
     def describe(self):
         return f"{type(self).__name__} named {self.name}"
     @abstractmethod
@@ -33,26 +44,26 @@ class Animal(ABC):
         pass
     
 class Dog(LogMixin, Animal):
-    def __init__(self, name, breed):
-        super().__init__(name)
+    def __init__(self, name, age, breed):
+        super().__init__(name, age)
         self.breed = breed
         self.log_info("Dog created: name=%s, Breed=%s", self.name, self.breed)
     def speak(self):
         self.log_info("Dog.speak called for %s", self.name)
-        return f"{self.name}, {self.breed} barks"
+        return f"{self.name}, {self.breed}, {self.age}, barks"
     
 class Cat(LogMixin, Animal):
-    def __init__(self, name, breed):
-        super().__init__(name)
+    def __init__(self, name, age, breed):
+        super().__init__(name, age)
         self.breed = breed
         self.log_info("Cat created: name=%s, Breed=%s", self.name, self.breed)
     def speak(self):
         self.log_warn("Cat.speak called for %s", self.name)
-        return f"{self.name}, {self.breed} meows"
+        return f"{self.name}, {self.breed}, {self.age}, meows"
         
 animals = [
-    Dog("Zhulia", "Chivinny"),
-    Cat("Murka", "Russian Blue")
+    Dog("Zhulia", 15, "Chivinny"),
+    Cat("Murka", 17, "Russian Blue")
 ]
 
 for a in animals:
