@@ -31,11 +31,11 @@ class Animal(ABC):
         self.age = age
         self._created_at = datetime.now()
     @property
-    def name(self):
-        return self._name
-    @property
     def id(self):
         return self.__id
+    @property
+    def name(self):
+        return self._name
     @property
     def age(self):
         return self._age
@@ -49,7 +49,7 @@ class Animal(ABC):
     def age(self, value):
         if not isinstance(value, int):
             raise ValueError("Age must be an integer")
-        if value < 0:
+        if value <= 0:
             raise ValueError("Age must be a non-zero number")
         self._age = value
     def describe(self):
@@ -86,6 +86,7 @@ class Cat(LogMixin, Animal):
 
 a0 = Dog("Zhulia", 12, "Chivinny")
 a1 = Cat("Murka", 17, "Russian Blue")
+a2 = Dog("Rex", 5, "German Shepherd")
 
-print(a0.name, a0.breed, a0.created_at, a0.is_adult, a0._Animal__id)
-print(a1.name, a1.breed, a1.created_at, a1.is_adult, a1._Animal__id)
+for animal in (a0, a1, a2):
+    print(animal.speak(), animal.describe(), animal.is_adult, animal.created_at, animal.id)
